@@ -1,180 +1,229 @@
 # GenOS-SMA
 An agentic framework for automating Linux terminal workflows.
 
+# GenOS-SMA: Multi-Agent Linux Command Orchestrator
 
-
-# Linux Multi-Agent Command Orchestrator
-
-An AI-driven system that interprets user instructions in plain English and executes Linux commands safely through a coordinated multi-agent framework.
-
-## Core Capabilities
-
-- **Natural Language Understanding**: Translates user requests into structured Linux commands.  
-- **Agent-Based Workflow**: Four dedicated agents for comprehension, planning, auditing, and execution.  
-- **Command Safety**: Evaluates risk levels and requests user approval for sensitive operations.  
-- **Knowledge Retention**: Stores successful command plans for future reuse.  
-- **Online Reference Search**: Fetches current instructions and best practices when required.  
-- **Error Handling**: Automatically adapts plans when commands fail.  
-- **Execution Audit**: Maintains logs of executed commands for transparency.
+An advanced AI-driven system that interprets natural language requests into secure and executable Linux commands using a multi-agent architecture. The system continuously learns from successful executions and incorporates risk assessment and auditing mechanisms.
 
 ---
 
-## System Components
+## Features
 
-### Comprehension Agent
-- Parses user instructions and determines the intended task.  
-- Assesses complexity and prerequisites.  
-- Suggests searches for missing context or dependencies.
-
-### Planning Agent
-- Constructs step-by-step command sequences.  
-- Checks the knowledge base for similar past tasks.  
-- Generates commands optimized for reliability and correctness.
-
-### Auditor Agent
-- Reviews the planned commands for potential hazards.  
-- Classifies commands into risk tiers: low, medium, or high.  
-- Requests user confirmation for commands that may alter the system.
-
-### Execution Agent
-- Runs approved commands with proper monitoring.  
-- Tracks success, errors, and timeouts.  
-- Feeds failures back to the Planning Agent for automatic replanning.
+- **Natural Language Understanding**: Converts plain English instructions into Linux commands  
+- **Multi-Agent Design**: Specialized agents for comprehension, planning, auditing, examination, and execution  
+- **Safety & Risk Analysis**: Built-in risk assessment and user approval for sensitive commands  
+- **Knowledge Base**: Stores executed plans for faster future responses  
+- **Web Search Integration**: Queries the web for context when needed  
+- **Multi-Line Input Support**: Accepts detailed, multi-step requests  
+- **Auditing & Logging**: Tracks all actions and generates execution summaries  
 
 ---
 
-## Getting Started
+## Architecture
 
-### Requirements
-- Linux environment  
+The system consists of five cooperating agents:
+
+### 1. Comprehension Agent
+- Analyzes user input and identifies intent, task type, complexity, requirements, and potential risks  
+- Uses web search for additional context if needed  
+
+### 2. Planning Agent
+- Creates a step-by-step command plan based on comprehension results  
+- Retrieves previous plans from the knowledge base if available  
+- Revises plans in case of errors or failures  
+
+### 3. Examiner Agent
+- Evaluates command plans for potential risks  
+- Categorizes commands by danger level  
+- Requests user permission for high-risk operations  
+
+### 4. Execution Agent
+- Safely executes approved commands  
+- Handles errors and timeouts gracefully  
+- Adds executed plans to the knowledge base  
+
+### 5. Auditor Agent
+- Logs all stages of processing: comprehension, planning, analysis, and execution  
+- Provides execution summaries and statistics  
+
+---
+
+## Installation
+
+### Prerequisites
 - Python 3.8+  
-- Internet access for search functionality  
+- Linux environment  
+- Internet connection for web search  
 
 ### Required API Keys
-- **Groq API Key**: Provides AI model access.  
-- **Tavily API Key**: Enables search for installation guides or latest information.  
+1. **Groq API Key** – For AI language model access  
+   - Sign up at [Groq Console](https://console.groq.com) and generate an API key  
 
-### Setup Steps
-1. **Clone the repository**
+2. **Tavily API Key** – For web search functionality  
+   - Sign up at [Tavily](https://app.tavily.com) and get an API key  
+
+### Setup
+1. Clone the repository:
 ```bash
-git clone https://github.com/YourUsername/linux-mas.git
-cd linux-mas
-Install dependencies
+git clone https://github.com/SpinningTop07/GenOS-SMA.git
+cd GenOS-SMA
 
-bash
-Copy code
+# Installation and Setup
+
+### Install dependencies
+
+```bash
 pip install -r requirements.txt
-Set environment variables
+```
 
-bash
-Copy code
+### Set environment variables
+
+```bash
 export GROQ_API_KEY="your_groq_api_key"
 export TAVILY_API_KEY="your_tavily_api_key"
-Start the orchestrator
+```
 
-bash
-Copy code
-python3 orchestrator.py
-User Interaction
-The system supports two modes of input:
+or create a `.env` file:
 
-Single-line requests: Quick commands like "Create a folder project".
+```bash
+GROQ_API_KEY=your_groq_api_key
+TAVILY_API_KEY=your_tavily_api_key
+```
 
-Multi-line requests: Detailed instructions spanning multiple lines (finish input with END).
+### Start the orchestrator
 
-Sample Commands
-Basic Tasks
+```bash
+python3 genosma.py
+```
 
-text
-Copy code
-Create a folder structure for a Python project
-Install Node.js and npm
-Set up a virtual environment with required packages
-Dynamic Content
+---
 
-text
-Copy code
-Generate a file with today’s stock prices
-Fetch and save the top 5 trending repositories from GitHub
-Create a summary of current AI news articles
-Safety & Auditing
-The Auditor Agent evaluates the command plan before execution:
+## User Interaction
 
-Risk Levels
-Low Risk: File creation, directory navigation
+The system supports two input modes:
 
-Medium Risk: Installing packages, editing non-critical files
+* **Single-line requests**: Quick commands, e.g., `"Create a Python project scaffold"`
+* **Multi-line requests**: Detailed instructions spanning multiple lines (finish input with `END`)
 
-High Risk: Modifying system directories, changing network configuration, altering users/permissions
+---
 
-Protections
-User confirmation for high-risk commands
+## Sample Commands
 
-Timeout protection (5 minutes per command)
+### Basic Tasks
 
-Automatic error handling and replanning
+```text
+Set up a Node.js project with Express and MongoDB
+Create directories for a React frontend project
+Install Python packages for data analysis
+```
 
-Logs all executed commands in command_audit_log.json
+### Dynamic / Context-Aware Tasks
 
-Knowledge Base
-The system stores previous successful plans in linux_command_history.json, allowing:
+```text
+Generate a CSV of the top 10 trending GitHub repositories
+Fetch latest Ubuntu security patches and save them
+Create a backup script for user documents with timestamp
+```
 
-Faster processing of repeated tasks
+---
 
-Improved accuracy through past solutions
+## Safety & Auditing
 
-Fuzzy matching to retrieve similar requests
+### Risk Levels
 
-Configuration
-Model Adjustments
-Customize AI behavior by modifying:
+* **Low Risk**: File creation, directory navigation
+* **Medium Risk**: Installing packages, editing non-critical files
+* **High Risk**: System-level changes, modifying users or permissions, network configuration
 
-python
-Copy code
+### Protections
+
+* Examiner Agent reviews all commands before execution
+* User confirmation required for high-risk commands
+* Timeout protection (5 minutes per command)
+* Automatic error handling and replanning
+* All actions logged in `execution_audit.json`
+
+---
+
+## Knowledge Base
+
+The system stores previous successful command plans in `linux_command_plans.json`, allowing:
+
+* Faster processing of repeated tasks
+* Improved accuracy through past solutions
+* Fuzzy matching to retrieve similar requests
+
+---
+
+## Configuration
+
+### LLM Model
+
+Modify the model configuration in the code:
+
+```python
 llm = ChatGroq(
     api_key=os.environ.get("GROQ_API_KEY"),
     model="deepseek-r1-distill-llama-70b",
-    temperature=0.25
+    temperature=0.3
 )
-Risk Tuning
-Adjust the thresholds for command categorization in AuditorAgent.examine_plan() if needed.
+```
 
-Contributing
-Fork the repository
+### Risk Thresholds
 
-Create a new branch
+Adjust risk thresholds in `ExaminerAgent.analyze_plan()` if needed.
 
-bash
-Copy code
+---
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch:
+
+```bash
 git checkout -b feature/your-feature-name
-Commit your changes
+```
 
-bash
-Copy code
+3. Commit your changes:
+
+```bash
 git commit -m "Add new feature"
-Push to your branch
+```
 
-bash
-Copy code
+4. Push to your branch:
+
+```bash
 git push origin feature/your-feature-name
-Open a pull request for review
+```
 
-Troubleshooting
-API Key Errors
+5. Open a Pull Request for review
 
-text
-Copy code
-Error: GROQ_API_KEY environment variable not set
-Ensure the environment variables are set correctly.
+---
 
-Confirm that internet access is available.
+## Troubleshooting
 
-Search Failures
+### API Key Errors
 
-text
-Copy code
+```text
+Error: GROQ_API_KEY or TAVILY_API_KEY environment variable not set
+```
+
+* Ensure environment variables are correctly set
+* Verify internet connectivity
+
+### Execution / Search Failures
+
+```text
 Search failed: Timeout
-Check the Tavily API key.
+```
 
-Verify your network connection.
+* Check Tavily API key
+* Verify network connection
+
+---
+
+## Logging & Auditing
+
+* All stages logged in `execution_audit.json`
+* Execution summary includes total commands, successes, failures, and error contexts
 
